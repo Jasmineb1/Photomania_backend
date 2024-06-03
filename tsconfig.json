@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+      "lib": ["es5", "es6", "dom"],
+      "target": "es6", // Change to es6 for better compatibility with modern JavaScript features
+      "module": "commonjs",
+      "moduleResolution": "node",
+      "emitDecoratorMetadata": true,
+      "experimentalDecorators": true,
+      "esModuleInterop": true, // Ensure compatibility between CommonJS and ES Module
+      "skipLibCheck": true, // Skip type checking of declaration files
+      "forceConsistentCasingInFileNames": true // Ensure consistent casing in import paths
+  },
+  "include": ["src/**/*", "config"], // Ensure it includes your source files
+  "exclude": ["node_modules"]
+}
