@@ -50,7 +50,7 @@ The following dependencies are required for the projects:
 1. Clone the repository to your local device:
 
    ```bash
-   git clone https://github.com/jasmineb1/photo-sharing-app-backend.git
+   git clone https://github.com/Jasmineb1/Photomania_backend.git
 
    ```
 
