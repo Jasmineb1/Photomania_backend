@@ -27,7 +27,7 @@ export class UserRegistration extends BaseEntity {
 
   @CreateDateColumn()
   @Column()
-  registered_on!: Date;
+  registeredOn!: Date;
 
   @OneToMany((type) => Post, (Post) => Post.userRegistration) posts: Post[];
 }

@@ -9,35 +9,35 @@ const postRepository = db.getRepository(Post);
 
 async function createPost(req: AuthenticatedRequest, res: Response) {
   console.log("From the controller file:", req.body);
-  console.log("From the controller file:", req.file);
+  console.log("Uploaded file:", req.file);
   console.log(req.user);
 
   try {
-    const { post_caption, post_desc } = req.body;
-    // const post_img = req.file.filename;
+    const { postCaption, postDesc } = req.body;
+
     const img = req.file;
-    const post_img = img?.path as string;
-    const image_name = req.file.originalname;
-    // console.log(post_img);
-    const posted_at = new Date();
-    // console.log(posted_at)
-    const userID = req.body.user_id;
-    const user_id = req.user.user_id;
-    const post_data = await postService.createPost({
-      post_img,
-      image_name,
-      post_caption,
-      post_desc,
-      posted_at,
-      user_id,
+    const postImg = img?.path as string;
+    const imageName = req.file.originalname;
+
+    const postedAt = new Date();
+
+    const userId = req.user.userId;
+    const postData = await postService.createPost({
+      postImg,
+      imageName,
+      postCaption,
+      postDesc,
+      postedAt,
+      userId,
     });
-    // console.log(post_data)
+
     res.status(201).json({
       status: "Success!",
       message: "Created",
-      post_data,
+      postData,
     });
   } catch (err) {
+    console.log(err);
     res.status(500).json({
       status: "Failed!",
       message: "Post Creation Failed!",
@@ -48,7 +48,7 @@ async function createPost(req: AuthenticatedRequest, res: Response) {
 async function listPosts(req: Request, res: Response) {
   try {
     const postDetails = await postService.listPosts();
-    // console.log("from cntroller ");
+
     res.status(200).json({
       status: "Fetched",
       message: "Details Fetched",
@@ -65,9 +65,9 @@ async function listPosts(req: Request, res: Response) {
 
 async function listPost(req: Request<{ id: number }>, res: Response) {
   try {
-    const post_id = req.params.id;
-    console.log("Post id here", post_id);
-    const postData = await postService.listPost(post_id);
+    const postId = req.params.id;
+    console.log("Post id here", postId);
+    const postData = await postService.listPost(postId);
     res.status(200).json({
       status: "Success!",
       messgae: "Fetcahed data!",
@@ -84,11 +84,11 @@ async function listPost(req: Request<{ id: number }>, res: Response) {
 // get post by userId
 async function userPosts(req: AuthenticatedRequest, res: Response) {
   try {
-    const user_id = req.user.user_id;
-    // const user_id = req.user;
-    console.log(user_id);
+    const userId = req.user.userId;
 
-    const userPostdata = await postService.userPosts(user_id);
+    console.log(userId);
+
+    const userPostdata = await postService.userPosts(userId);
     if (!userPostdata) {
       res.status(204).json({
         status: "No content!",
@@ -111,20 +111,23 @@ async function userPosts(req: AuthenticatedRequest, res: Response) {
 async function updatePost(req: AuthenticatedRequest, res: Response) {
   try {
     console.log(req.body);
-    const post_id = parseInt(req.params.id);
-    const user_id = req.user.user_id;
+    const postId = parseInt(req.params.id);
+
+    const userId = req.user.userId;
+
     const image = req.file;
-    const image_url = image?.path;
-    const original_name = req.file.originalname;
-    console.log(original_name);
-    const { post_caption, post_desc } = req.body;
-    console.log(post_caption, post_desc);
-    const postData = await postService.updatePost(user_id, post_id, {
-      image_url,
-      original_name,
-      post_caption,
-      post_desc,
+    const imageUrl = image?.path;
+    const originalName = req.file.originalname;
+
+    const { postCaption, postDesc } = req.body;
+    console.log(postCaption, postDesc);
+    const postData = await postService.updatePost(userId, postId, {
+      imageUrl,
+      originalName,
+      postCaption,
+      postDesc,
     });
+
     if (postData) {
       res.status(200).json({
         postData,
@@ -135,7 +138,7 @@ async function updatePost(req: AuthenticatedRequest, res: Response) {
   } catch (err) {
     console.log("Error updating information");
     res.status(304).json({
-      status: "Not Modifi",
+      status: "Not Modified",
       message: "Updating data failed!",
       err,
     });
@@ -144,15 +147,15 @@ async function updatePost(req: AuthenticatedRequest, res: Response) {
 // delete users posts
 async function deletePost(req: AuthenticatedRequest, res: Response) {
   try {
-    const post_id = req.params.id;
-    const user_id = req.user.user_id;
-    if (!user_id) {
+    const postId = req.params.id;
+    const userId = req.user.userId;
+    if (!userId) {
       res.status(401).json({
         stauts: "unauthorized",
         message: "User not authenticated",
       });
     }
-    const userPostDelete = await postService.deleteUserPost(user_id, post_id);
+    const userPostDelete = await postService.deleteUserPost(userId, postId);
 
     if (!userPostDelete) {
       res.status(204).json({

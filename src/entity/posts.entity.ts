@@ -12,28 +12,27 @@ import {
 import { UserRegistration } from "./user.entity";
 
 @Entity({ synchronize: true })
-@Entity({ synchronize: true })
 export class Post {
   @PrimaryGeneratedColumn()
-  post_id!: number;
+  postId!: number;
 
   @Column()
-  post_img!: string;
+  postImg!: string;
 
   @Column()
-  image_name!: string;
+  imageName!: string;
 
   @Column()
-  post_caption!: String;
+  postCaption!: String;
 
   @Column()
-  post_desc!: string;
+  postDesc!: string;
 
   @CreateDateColumn()
-  posted_at!: Date;
+  postedAt!: Date;
 
   @CreateDateColumn()
-  upadated_at!: Date;
+  upadatedAt!: Date;
 
   @ManyToOne(
     () => UserRegistration,
