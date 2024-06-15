@@ -34,7 +34,7 @@ async function createPost(req: AuthenticatedRequest, res: Response) {
     res.status(201).json({
       status: "Success!",
       message: "Created",
-      postData,
+      // postData,
     });
   } catch (err) {
     console.log(err);
@@ -130,7 +130,7 @@ async function updatePost(req: AuthenticatedRequest, res: Response) {
 
     if (postData) {
       res.status(200).json({
-        postData,
+        // postData,
         status: "success!",
         message: "Post updated!",
       });
