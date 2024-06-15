@@ -1,20 +1,31 @@
+import { validationResult } from "express-validator";
 import { postController } from "../controllers/post.Controller";
+import { postValidator } from "../middleware/formValidator";
 import { upload } from "../middleware/imageUpload.middleware";
 import { authenticateToken } from "../middleware/userAuth.middleware";
 
 const express = require("express");
-const post_router = express.Router();
+const postRouter = express.Router();
 const userPostRouter = express.Router();
 
-post_router.post(
+postRouter.post(
   "/",
+
   authenticateToken,
   upload.single("image"),
+  postValidator,
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
+    next();
+  },
   postController.createPost
 );
 
 //get post by postid
-post_router.get("/:id", postController.listPost);
+postRouter.get("/:id", postController.listPost);
 //get posts of a specific user by userid
 userPostRouter.get("/", authenticateToken, postController.userPosts);
 userPostRouter.delete("/:id", authenticateToken, postController.deletePost);
@@ -25,4 +36,4 @@ userPostRouter.put(
   postController.updatePost
 );
 
-export const postRoutes = { post_router, userPostRouter };
+export const postRoutes = { postRouter, userPostRouter };

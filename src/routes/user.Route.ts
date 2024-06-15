@@ -1,19 +1,43 @@
+import { validationResult } from "express-validator";
 import { postController } from "../controllers/post.Controller";
 import { userController } from "../controllers/userAuthentication.controller";
+import { loginValidator, registerValidator } from "../middleware/formValidator";
 import { authenticateToken } from "../middleware/userAuth.middleware";
 const express = require("express");
-const user_register_router = express.Router();
-const user_login_router = express.Router();
-const user_logout_router = express.Router();
+const userRegisterRouter = express.Router();
+const userLoginRouter = express.Router();
+const userLogoutRouter = express.Router();
 
-user_register_router.post("/", userController.registerUSer);
+userRegisterRouter.post(
+  "/",
+  registerValidator,
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
+    next();
+  },
+  userController.registerUSer
+);
 
-user_login_router.post("/", userController.login);
+userLoginRouter.post(
+  "/",
+  loginValidator,
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
+    next();
+  },
+  userController.login
+);
 
-user_logout_router.get("/", authenticateToken, userController.logout);
+userLogoutRouter.get("/", authenticateToken, userController.logout);
 
-export const user_routes = {
-  user_register_router,
-  user_login_router,
-  user_logout_router,
+export const userRoutes = {
+  userRegisterRouter,
+  userLoginRouter,
+  userLogoutRouter,
 };
