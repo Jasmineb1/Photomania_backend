@@ -1,6 +1,6 @@
 import bodyParser from "body-parser";
 import { db } from "./datasource";
-import { user_routes } from "./routes/user.Route";
+import { userRoutes } from "./routes/user.Route";
 import { postRoutes } from "./routes/post.routes";
 import { authenticateToken } from "./middleware/userAuth.middleware";
 import { postController } from "./controllers/post.Controller";
@@ -17,15 +17,15 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Set up the user router(for login and registration)
 const user_router = require("./routes/user.Route");
-app.use("/register", user_routes.user_register_router);
-app.use("/login", user_routes.user_login_router);
+app.use("/register", userRoutes.userRegisterRouter);
+app.use("/login", userRoutes.userLoginRouter);
 
 // For post creation
-app.use("/post", postRoutes.post_router);
+app.use("/post", postRoutes.postRouter);
 app.use("/posts", postController.listPosts);
 
 app.use("/user/post", postRoutes.userPostRouter);
-app.use("/logout", user_routes.user_logout_router);
+app.use("/logout", userRoutes.userLogoutRouter);
 
 // app.get("/profile", auth_token,(req, res)=>{
 //     const user = req['user'];
