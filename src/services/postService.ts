@@ -8,40 +8,42 @@ const fs = require("fs");
 const postRepository = db.getRepository(Post);
 
 type TPost = {
-  post_img: string;
-  image_name: string;
-  post_caption: string;
-  post_desc: string;
-  posted_at: Date;
-  user_id: number;
+  postImg: string;
+  imageName: string;
+  postCaption: string;
+  postDesc: string;
+  postedAt: Date;
+  userId: number;
 };
 
 async function createPost({
-  post_img,
-  image_name,
-  post_caption,
-  post_desc,
-  posted_at,
-  user_id,
+  postImg,
+  imageName,
+  postCaption,
+  postDesc,
+  postedAt,
+  userId,
 }: TPost) {
-  const user = await UserRegistration.findOne({ where: { id: user_id } });
+  const user = await UserRegistration.findOne({ where: { id: userId } });
 
   // check if the user exists ??
 
   const post = postRepository.create({
-    post_img,
-    image_name,
-    post_caption,
-    post_desc,
-    posted_at,
+    postImg,
+    imageName,
+    postCaption,
+    postDesc,
+    postedAt,
     userRegistration: user,
   });
+  console.log("Here at service");
+  console.log("post image", postImg);
   await postRepository.save(post);
   return post;
 }
 
-async function listPost(post_id: number) {
-  const post = await postRepository.findOne({ where: { post_id: post_id } });
+async function listPost(postId: number) {
+  const post = await postRepository.findOne({ where: { postId: postId } });
   if (!post) {
     throw new Error("Post not found");
   }
@@ -55,9 +57,9 @@ async function listPosts() {
   return posts;
 }
 // get posts by userId
-async function userPosts(user_id) {
+async function userPosts(userId) {
   const userpost = await postRepository.find({
-    where: { userRegistration: { id: user_id } },
+    where: { userRegistration: { id: userId } },
   });
   if (!userpost || userPosts.length === 0) {
     throw new Error("User doesnot have any posts!");
@@ -66,14 +68,14 @@ async function userPosts(user_id) {
 }
 
 // delete userpostby postid
-async function deleteUserPost(user_id, post_id) {
+async function deleteUserPost(userId, postId) {
   const post = await postRepository.findOne({
-    where: { post_id: post_id, userRegistration: { id: user_id } },
+    where: { postId: postId, userRegistration: { id: userId } },
   });
   console.log(post);
-  console.log(post.post_img);
+  console.log(post.postImg);
   await postRepository.remove(post);
-  const path = post.post_img;
+  const path = post.postImg;
   fs.unlink(path, (err) => {
     if (err) {
       console.error(err);
@@ -82,11 +84,13 @@ async function deleteUserPost(user_id, post_id) {
   return post;
 }
 // update user post by postid
-async function updatePost(user_id, post_id, updatedPostData) {
+async function updatePost(userId, postId, updatedPostData) {
   console.log(updatedPostData);
+  console.log("reached service");
   const postToUpdate = await postRepository.findOne({
-    where: { post_id, userRegistration: { id: user_id } },
+    where: { postId, userRegistration: { id: userId } },
   });
+  console.log("post to update", postToUpdate);
 
   if (!postToUpdate) {
     throw new Error("Post does not belong to the user!");

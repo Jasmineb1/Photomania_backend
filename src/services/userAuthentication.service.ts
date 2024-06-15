@@ -10,18 +10,18 @@ async function registerUser({
   username,
   email,
   password,
-  registered_on,
+  registeredOn,
 }: {
   username: string;
   email: string;
   password: string;
-  registered_on: Date;
+  registeredOn: Date;
 }) {
   const user = userRepository.create({
     username,
     email,
     password,
-    registered_on,
+    registeredOn,
   });
   await userRepository.save(user);
   return user;
@@ -32,20 +32,23 @@ async function login(req: Request, res: Response) {
   const { email, password } = req.body;
   // const inputhashedpw= await bcrypt.hash(req.body.password, 10);
   // console.log(inputhashedpw)
-  const check_user = await userRepository.findOne({ where: { email: email } });
-  if (check_user) {
-    const hashedPassword = check_user.password;
+  const checkUser = await userRepository.findOne({ where: { email: email } });
+  console.log(checkUser);
+  if (checkUser) {
+    const hashedPassword = checkUser.password;
     const passwordMatch = await bcrypt.compare(password.trim(), hashedPassword);
     if (passwordMatch) {
       const token = jwt.sign(
         {
-          user_id: check_user.id,
+          userId: checkUser.id,
         },
         "secret",
         { expiresIn: "1d" }
       );
+      console.log("Token from service:", token);
+      console.log("userid from service:", checkUser.id);
       let obj = {
-        userName: check_user.username,
+        userName: checkUser.username,
         token: token,
         message: "login successful!",
       };

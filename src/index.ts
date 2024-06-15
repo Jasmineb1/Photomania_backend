@@ -4,10 +4,14 @@ import { user_routes } from "./routes/user.Route";
 import { postRoutes } from "./routes/post.routes";
 import { authenticateToken } from "./middleware/userAuth.middleware";
 import { postController } from "./controllers/post.Controller";
-
+import cors from "cors";
 const express = require("express");
 const app = express();
+
 require("dotenv").config();
+app.use(cors());
+app.use(express.static("public"));
+app.use(bodyParser.json());
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -21,6 +25,7 @@ app.use("/post", postRoutes.post_router);
 app.use("/posts", postController.listPosts);
 
 app.use("/user/post", postRoutes.userPostRouter);
+app.use("/logout", user_routes.user_logout_router);
 
 // app.get("/profile", auth_token,(req, res)=>{
 //     const user = req['user'];

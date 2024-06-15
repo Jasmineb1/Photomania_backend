@@ -9,12 +9,15 @@ const userregRepository = db.getRepository(UserRegistration);
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 async function registerUSer(req: Request, res: Response) {
+  console.log(req.body);
   try {
     const { username, email, password } = req.body;
-    const registered_on = new Date();
+    const registeredOn = new Date();
     const existingUser = await userregRepository.findOne({
       where: { email: email },
     });
+    console.log(email);
+    console.log(existingUser);
     if (existingUser) {
       res.status(401).json({
         status: "Failed",
@@ -32,7 +35,7 @@ async function registerUSer(req: Request, res: Response) {
           username,
           email,
           password: hashedPassword,
-          registered_on,
+          registeredOn,
         });
         res.status(201).json({
           status: "success",
@@ -51,10 +54,19 @@ async function registerUSer(req: Request, res: Response) {
 
 async function login(req: Request, res: Response) {
   const result = await userService.login(req, res);
+  console.log("From the controller:", result);
   res.status(200).json(result);
 }
 
+async function logout(req: Request, res: Response) {
+  // console.log("logout api hit");
+  return res.status(200).json({
+    status: "Success",
+    message: "logout successful",
+  });
+}
 export const userController = {
   registerUSer,
   login,
+  logout,
 };

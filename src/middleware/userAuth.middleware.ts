@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 
 type User = {
-  user_id: number;
+  userId: number;
 };
 
 export interface AuthenticatedRequest extends Request {
@@ -21,16 +21,16 @@ export function authenticateToken(
   // console.log(token);
 
   if (token == null) {
-    return res.sendStatus(401); // Unauthorized
+    return res.sendStatus(401);
   }
 
   jwt.verify(token, "secret", (err, user) => {
-    console.log({ err });
+    // console.log({ err });
     if (err) {
-      return res.status(403).json({ err }); // Forbidden
+      return res.status(403).json({ err });
     }
-    req.user = user as User; // Attach the user object to the request
-    console.log(user);
+    req.user = user as User;
+    console.log("Logging user:", req.user);
     next();
   });
 }
