@@ -34,6 +34,7 @@ app.use("/posts", postController.listPosts);
 app.use("/user/post", postRoutes.userPostRouter);
 app.use("/logout", userRoutes.userLogoutRouter);
 app.use("/profile", userRoutes.userProfileRouter);
+app.use("/profile/me", userRoutes.meRouter);
 
 // app.get("/profile", auth_token,(req, res)=>{
 //     const user = req['user'];
