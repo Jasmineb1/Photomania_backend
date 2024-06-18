@@ -38,7 +38,7 @@ userLoginRouter.post(
 
 userLogoutRouter.get("/", authenticateToken, userController.logout);
 userProfileRouter.get("/:id", userController.userProfile);
-meRouter.get("/:id", authenticateToken, userController.userProfile);
+meRouter.get("/:id", userController.userProfile);
 
 export const userRoutes = {
   userRegisterRouter,
