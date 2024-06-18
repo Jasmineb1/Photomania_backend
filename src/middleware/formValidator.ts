@@ -16,6 +16,8 @@ export const registerValidator = [
   body("password", "The minimum password length is 6 characters").isLength({
     min: 6,
   }),
+  body("firstName", "Invalid! Field must not by Empty").not().isEmpty(),
+  body("lastName", "Invalid! Field must not by Empty").not().isEmpty(),
 ];
 
 export const postValidator = [

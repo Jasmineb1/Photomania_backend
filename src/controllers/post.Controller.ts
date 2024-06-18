@@ -100,18 +100,20 @@ async function listPost(req: Request<{ id: number }>, res: Response) {
 }
 
 // get post by userId
-async function userPosts(req: typeof AuthenticatedRequest, res: Response) {
+async function userPosts(req: Request, res: Response) {
+  console.log(req.params.id);
+  console.log("From controller:", req.params.id);
+
   try {
-    const userId = req.user.userId;
-
-    console.log(userId);
-
+    const userId = req.params.id;
+    console.log("Controller ko try block:", userId);
     const userPostdata = await postService.userPosts(userId);
     if (!userPostdata) {
       res.status(204).json({
         status: "No content!",
         messgae: "User doesnot have any posts!",
       });
+      return;
     }
     res.status(200).json({
       stauts: "Success!",
@@ -125,6 +127,7 @@ async function userPosts(req: typeof AuthenticatedRequest, res: Response) {
     });
   }
 }
+
 // update userpost
 async function updatePost(req: typeof AuthenticatedRequest, res: Response) {
   try {

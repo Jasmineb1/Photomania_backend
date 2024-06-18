@@ -71,12 +71,16 @@ async function listPosts(page: number, limit: number) {
 }
 // get posts by userId
 async function userPosts(userId) {
+  console.log("From services:", userId);
   const userpost = await postRepository.find({
     where: { userRegistration: { id: userId } },
   });
-  if (!userpost || userPosts.length === 0) {
-    throw new Error("User doesnot have any posts!");
+
+  if (!userpost || userpost.length === 0) {
+    // Corrected the reference
+    throw new Error("User does not have any posts!");
   }
+
   return userpost;
 }
 
