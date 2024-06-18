@@ -8,6 +8,7 @@ const userRegisterRouter = express.Router();
 const userLoginRouter = express.Router();
 const userLogoutRouter = express.Router();
 const userProfileRouter = express.Router();
+const meRouter = express.Router();
 const { validationResult } = require("express-validator");
 userRegisterRouter.post(
   "/",
@@ -37,10 +38,12 @@ userLoginRouter.post(
 
 userLogoutRouter.get("/", authenticateToken, userController.logout);
 userProfileRouter.get("/:id", userController.userProfile);
+meRouter.get("/:id", authenticateToken, userController.userProfile);
 
 export const userRoutes = {
   userRegisterRouter,
   userLoginRouter,
   userLogoutRouter,
   userProfileRouter,
+  meRouter,
 };
