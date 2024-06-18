@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 
-import jwt from "jsonwebtoken";
+// import jwt from "jsonwebtoken";
+
+const jwt = require("jsonwebtoken");
 
 type User = {
   userId: number;

@@ -1,8 +1,13 @@
-import { userService } from "../services/userAuthentication.service";
+// import { userService } from "../services/userAuthentication.service";
 import { Request, Response } from "express";
-import { UserRegistration } from "../entity/user.entity";
-import { db } from "../datasource";
-import bcrypt from "bcryptjs";
+// import { UserRegistration } from "../entity/user.entity";
+// import { db } from "../datasource";
+// import bcrypt from "bcryptjs";
+
+const { userService } = require("../services/userAuthentication.service");
+const { UserRegistration } = require("../entity/user.entity");
+const { db } = require("../datasource");
+const bcrypt = require("bcryptjs");
 
 const userregRepository = db.getRepository(UserRegistration);
 
@@ -11,7 +16,7 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 async function registerUSer(req: Request, res: Response) {
   console.log(req.body);
   try {
-    const { username, email, password } = req.body;
+    const { username, email, password, firstName, lastName } = req.body;
     const registeredOn = new Date();
     const existingUser = await userregRepository.findOne({
       where: { email: email },
@@ -36,6 +41,8 @@ async function registerUSer(req: Request, res: Response) {
           email,
           password: hashedPassword,
           registeredOn,
+          firstName,
+          lastName,
         });
         res.status(201).json({
           status: "success",
@@ -52,6 +59,34 @@ async function registerUSer(req: Request, res: Response) {
   }
 }
 
+async function userProfile(req: Request, res: Response) {
+  try {
+    const userId = req.params.id;
+
+    console.log(userId);
+
+    const userdata = await userService.userProfile(userId);
+
+    res.status(200).json({
+      status: "Success!",
+      message: "User data fetched!",
+      userdata,
+    });
+  } catch (err) {
+    if (err.message === "User does not exist") {
+      return res.status(204).json({
+        status: "No content!",
+        message: "User does not exist",
+      });
+    }
+
+    console.error("Error fetching user profile:", err);
+    res.status(500).json({
+      status: "Failed!",
+      message: "User data fetch failed",
+    });
+  }
+}
 async function login(req: Request, res: Response) {
   const result = await userService.login(req, res);
   console.log("From the controller:", result);
@@ -69,4 +104,5 @@ export const userController = {
   registerUSer,
   login,
   logout,
+  userProfile,
 };

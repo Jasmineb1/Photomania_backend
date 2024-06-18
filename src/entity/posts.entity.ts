@@ -1,4 +1,4 @@
-import {
+const {
   Entity,
   BaseEntity,
   Column,
@@ -8,9 +8,9 @@ import {
   ManyToOne,
   JoinTable,
   CreateDateColumn,
-} from "typeorm";
+} = require("typeorm");
 import { UserRegistration } from "./user.entity";
-
+// const { UserRegistration } = require("./user.entity");
 @Entity({ synchronize: true })
 export class Post {
   @PrimaryGeneratedColumn()

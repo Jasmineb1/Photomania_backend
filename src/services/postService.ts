@@ -1,8 +1,10 @@
-import { Request, Response } from "express";
-import { Post } from "../entity/posts.entity";
-import { db } from "../datasource";
-import { userService } from "./userAuthentication.service";
-import { UserRegistration } from "../entity/user.entity";
+// import { Post } from "../entity/posts.entity";
+// import { db } from "../datasource";
+// import { userService } from "./userAuthentication.service";
+// import { UserRegistration } from "../entity/user.entity";
+const { Post } = require("../entity/posts.entity");
+const { db } = require("../datasource");
+const { UserRegistration } = require("../entity/user.entity");
 const fs = require("fs");
 
 const postRepository = db.getRepository(Post);
@@ -43,18 +45,29 @@ async function createPost({
 }
 
 async function listPost(postId: number) {
-  const post = await postRepository.findOne({ where: { postId: postId } });
+  const post = await postRepository.findOne({
+    where: { postId: postId },
+    relations: ["userRegistration"],
+  });
   if (!post) {
     throw new Error("Post not found");
   }
   return post;
 }
 
-async function listPosts() {
-  console.log("From service post");
-  const posts = await postRepository.find();
-  console.log("Post: ", posts);
-  return posts;
+async function listPosts(page: number, limit: number) {
+  // console.log((page - 1) * limit);
+  // console.log("From service post");
+  // const posts = await postRepository.find();
+  const [posts, count] = await postRepository.findAndCount({
+    order: {
+      postedAt: "DESC",
+    },
+    skip: (page - 1) * limit,
+    take: limit,
+  });
+
+  return { posts, count };
 }
 // get posts by userId
 async function userPosts(userId) {
