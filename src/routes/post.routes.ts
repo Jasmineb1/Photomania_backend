@@ -27,7 +27,7 @@ postRouter.post(
 //get post by postid
 postRouter.get("/:id", postController.listPost);
 //get posts of a specific user by userid
-userPostRouter.get("/", authenticateToken, postController.userPosts);
+userPostRouter.get("/:id", postController.userPosts);
 userPostRouter.delete("/:id", authenticateToken, postController.deletePost);
 userPostRouter.put(
   "/:id",

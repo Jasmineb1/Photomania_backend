@@ -90,8 +90,43 @@ async function userProfile(userId) {
   }
   return userProfile;
 }
+
+async function updateUser(userId, updatedUserData) {
+  console.log("Updated user data:", updatedUserData);
+  console.log("Reached service");
+
+  try {
+    const userToUpdate = await userRepository.findOne({
+      where: { id: userId },
+    });
+
+    if (!userToUpdate) {
+      throw new Error("User not found!");
+    }
+    updatedUserData.userImg = updatedUserData.imageUrl;
+    updatedUserData.userImgName = updatedUserData.originalName;
+    delete updatedUserData.imageUrl;
+    delete updatedUserData.originalName;
+    console.log("Current user data:", userToUpdate);
+
+    userRepository.merge(userToUpdate, updatedUserData);
+
+    console.log("User data after merge:", userToUpdate);
+
+    await userRepository.save(userToUpdate);
+
+    console.log("User data after save:", userToUpdate);
+
+    return userToUpdate;
+  } catch (error) {
+    console.error("Error updating user:", error);
+    throw error;
+  }
+}
+
 export const userService = {
   registerUser,
   login,
   userProfile,
+  updateUser,
 };

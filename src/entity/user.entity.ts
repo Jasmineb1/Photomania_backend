@@ -16,6 +16,7 @@ export class UserRegistration extends BaseEntity {
   @PrimaryGeneratedColumn()
   id!: number;
 
+  @Unique()
   @Column()
   username!: string;
 
