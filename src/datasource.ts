@@ -1,8 +1,12 @@
-import "reflect-metadata";
-import { DataSource } from "typeorm";
-import { UserRegistration } from "./entity/user.entity";
-import { Post } from "./entity/posts.entity";
+// import "reflect-metadata";
+// import { DataSource } from "typeorm";
+// import { UserRegistration } from "./entity/user.entity";
+// import { Post } from "./entity/posts.entity";
 require("dotenv").config();
+require("reflect-metadata");
+const { DataSource } = require("typeorm");
+const { UserRegistration } = require("./entity/user.entity");
+const { Post } = require("./entity/posts.entity");
 
 console.log(process.env.DB_NAME);
 

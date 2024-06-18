@@ -1,4 +1,4 @@
-import { validationResult } from "express-validator";
+// import { validationResult } from "express-validator";
 import { postController } from "../controllers/post.Controller";
 import { userController } from "../controllers/userAuthentication.controller";
 import { loginValidator, registerValidator } from "../middleware/formValidator";
@@ -7,7 +7,8 @@ const express = require("express");
 const userRegisterRouter = express.Router();
 const userLoginRouter = express.Router();
 const userLogoutRouter = express.Router();
-
+const userProfileRouter = express.Router();
+const { validationResult } = require("express-validator");
 userRegisterRouter.post(
   "/",
   registerValidator,
@@ -35,9 +36,11 @@ userLoginRouter.post(
 );
 
 userLogoutRouter.get("/", authenticateToken, userController.logout);
+userProfileRouter.get("/:id", userController.userProfile);
 
 export const userRoutes = {
   userRegisterRouter,
   userLoginRouter,
   userLogoutRouter,
+  userProfileRouter,
 };

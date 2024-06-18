@@ -1,12 +1,19 @@
-import bodyParser from "body-parser";
-import { db } from "./datasource";
-import { userRoutes } from "./routes/user.Route";
-import { postRoutes } from "./routes/post.routes";
-import { authenticateToken } from "./middleware/userAuth.middleware";
-import { postController } from "./controllers/post.Controller";
-import cors from "cors";
+// import bodyParser from "body-parser";
+// import { db } from "./datasource";
+// import { userRoutes } from "./routes/user.Route";
+// import { postRoutes } from "./routes/post.routes";
+// import { authenticateToken } from "./middleware/userAuth.middleware";
+// import { postController } from "./controllers/post.Controller";
+// import cors from "cors";
+// const { bodyParser } = require("body-parser");
+const { db } = require("./datasource");
+const { userRoutes } = require("./routes/user.Route");
+const { postRoutes } = require("./routes/post.routes");
+const { postController } = require("./controllers/post.Controller");
+const cors = require("cors");
 const express = require("express");
 const app = express();
+const bodyParser = express;
 
 require("dotenv").config();
 app.use(cors());
@@ -26,6 +33,7 @@ app.use("/posts", postController.listPosts);
 
 app.use("/user/post", postRoutes.userPostRouter);
 app.use("/logout", userRoutes.userLogoutRouter);
+app.use("/profile", userRoutes.userProfileRouter);
 
 // app.get("/profile", auth_token,(req, res)=>{
 //     const user = req['user'];

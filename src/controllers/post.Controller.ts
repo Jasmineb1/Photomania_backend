@@ -1,13 +1,19 @@
-import { postService } from "../services/postService";
+// import { postService } from "../services/postService";
 import { Request, Response } from "express";
-import { db } from "../datasource";
-import { Post } from "../entity/posts.entity";
-import { AuthenticatedRequest } from "../middleware/userAuth.middleware";
-import { UserRegistration } from "../entity/user.entity";
+// import { db } from "../datasource";
+// import { Post } from "../entity/posts.entity";
+// import { AuthenticatedRequest } from "../middleware/userAuth.middleware";
+// import { UserRegistration } from "../entity/user.entity";
+
+const { postService } = require("../services/postService");
+const { db } = require("../datasource");
+const { Post } = require("../entity/posts.entity");
+const { AuthenticatedRequest } = require("../middleware/userAuth.middleware");
+const { UserRegistration } = require("../entity/user.entity");
 
 const postRepository = db.getRepository(Post);
 
-async function createPost(req: AuthenticatedRequest, res: Response) {
+async function createPost(req: typeof AuthenticatedRequest, res: Response) {
   console.log("From the controller file:", req.body);
   console.log("Uploaded file:", req.file);
   console.log(req.user);
@@ -47,13 +53,24 @@ async function createPost(req: AuthenticatedRequest, res: Response) {
 
 async function listPosts(req: Request, res: Response) {
   try {
-    const postDetails = await postService.listPosts();
+    const page = Number(req.query.page);
+
+    const limit = Number(req.query.limit);
+
+    // const postDetails = await postService.listPosts(page, limit);
+    const { posts, count } = await postService.listPosts(page, limit);
+
+    const totalPages = Math.ceil(count / limit);
 
     res.status(200).json({
       status: "Fetched",
       message: "Details Fetched",
-      postDetails,
+      currentPage: page,
+      totalPages: totalPages,
+      posts: posts,
     });
+
+    // console.log(totalPages);
   } catch (err) {
     res.status(204).json({
       status: "No content",
@@ -68,6 +85,7 @@ async function listPost(req: Request<{ id: number }>, res: Response) {
     const postId = req.params.id;
     console.log("Post id here", postId);
     const postData = await postService.listPost(postId);
+    console.log(postData);
     res.status(200).json({
       status: "Success!",
       messgae: "Fetcahed data!",
@@ -82,7 +100,7 @@ async function listPost(req: Request<{ id: number }>, res: Response) {
 }
 
 // get post by userId
-async function userPosts(req: AuthenticatedRequest, res: Response) {
+async function userPosts(req: typeof AuthenticatedRequest, res: Response) {
   try {
     const userId = req.user.userId;
 
@@ -108,22 +126,22 @@ async function userPosts(req: AuthenticatedRequest, res: Response) {
   }
 }
 // update userpost
-async function updatePost(req: AuthenticatedRequest, res: Response) {
+async function updatePost(req: typeof AuthenticatedRequest, res: Response) {
   try {
     console.log(req.body);
     const postId = parseInt(req.params.id);
 
     const userId = req.user.userId;
 
-    const image = req.file;
-    const imageUrl = image?.path;
-    const originalName = req.file.originalname;
+    // const image = req.file;
+    // const imageUrl = image?.path;
+    // const originalName = req.file.originalname;
 
     const { postCaption, postDesc } = req.body;
     console.log(postCaption, postDesc);
     const postData = await postService.updatePost(userId, postId, {
-      imageUrl,
-      originalName,
+      // imageUrl,
+      // originalName,
       postCaption,
       postDesc,
     });
@@ -145,7 +163,7 @@ async function updatePost(req: AuthenticatedRequest, res: Response) {
   }
 }
 // delete users posts
-async function deletePost(req: AuthenticatedRequest, res: Response) {
+async function deletePost(req: typeof AuthenticatedRequest, res: Response) {
   try {
     const postId = req.params.id;
     const userId = req.user.userId;

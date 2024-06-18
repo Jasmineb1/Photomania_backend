@@ -1,5 +1,6 @@
-import { body } from "express-validator";
+// import { body } from "express-validator";
 
+const { body } = require("express-validator");
 export const loginValidator = [
   body("email", "Invalid does not Empty").not().isEmpty(),
   body("email", "Invalid email").isEmail(),

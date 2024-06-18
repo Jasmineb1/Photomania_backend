@@ -1,4 +1,4 @@
-import {
+const {
   Entity,
   BaseEntity,
   Column,
@@ -8,9 +8,9 @@ import {
   ManyToOne,
   JoinTable,
   CreateDateColumn,
-} from "typeorm";
+} = require("typeorm");
 import { Post } from "./posts.entity";
-
+// const { Post } = require("./posts.entity");
 @Entity({ synchronize: true })
 export class UserRegistration extends BaseEntity {
   @PrimaryGeneratedColumn()
@@ -25,9 +25,22 @@ export class UserRegistration extends BaseEntity {
   @Column()
   password!: string;
 
+  @Column()
+  firstName!: string;
+
+  @Column()
+  lastName!: string;
+
+  @Column()
+  userImg!: string;
+
+  @Column()
+  userImgName!: string;
+
   @CreateDateColumn()
   @Column()
   registeredOn!: Date;
 
-  @OneToMany((type) => Post, (Post) => Post.userRegistration) posts: Post[];
+  @OneToMany((type) => Post, (Post) => Post.userRegistration)
+  posts: Post[];
 }

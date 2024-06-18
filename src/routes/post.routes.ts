@@ -1,4 +1,4 @@
-import { validationResult } from "express-validator";
+// import { validationResult } from "express-validator";
 import { postController } from "../controllers/post.Controller";
 import { postValidator } from "../middleware/formValidator";
 import { upload } from "../middleware/imageUpload.middleware";
@@ -7,7 +7,7 @@ import { authenticateToken } from "../middleware/userAuth.middleware";
 const express = require("express");
 const postRouter = express.Router();
 const userPostRouter = express.Router();
-
+const { validationResult } = require("express-validator");
 postRouter.post(
   "/",
 
