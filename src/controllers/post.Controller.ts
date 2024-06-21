@@ -100,7 +100,7 @@ async function listPost(req: Request<{ id: number }>, res: Response) {
 }
 
 // get post by userId
-async function userPosts(req: Request, res: Response) {
+async function userPosts(req, res) {
   console.log(req.params.id);
   console.log("From controller:", req.params.id);
 
@@ -108,20 +108,23 @@ async function userPosts(req: Request, res: Response) {
     const userId = req.params.id;
     console.log("Controller ko try block:", userId);
     const userPostdata = await postService.userPosts(userId);
-    if (!userPostdata) {
-      res.status(204).json({
+    console.log(userPostdata);
+
+    if (userPostdata.length === 0) {
+      return res.send({
         status: "No content!",
-        messgae: "User doesnot have any posts!",
+        message: "User does not have any posts!",
       });
-      return;
     }
-    res.status(200).json({
-      stauts: "Success!",
+
+    return res.status(200).json({
+      status: "Success!",
       message: "User data fetched!",
       userPostdata,
     });
   } catch (err) {
-    res.status(500).json({
+    console.error("Error in userPosts controller:", err);
+    return res.status(500).json({
       status: "Failed!",
       message: "User post fetch failed",
     });
