@@ -41,11 +41,16 @@ userLoginRouter.post(
 
 userLogoutRouter.get("/", authenticateToken, userController.logout);
 userProfileRouter.get("/:id", userController.userProfile);
-userProfileRouter.put(
+userProfileRouter.patch(
   "/edit/:id",
   authenticateToken,
   upload.single("image"),
   userController.updateUser
+);
+userProfileRouter.delete(
+  "/edit/:id",
+  authenticateToken,
+  userController.deleteUserPhoto
 );
 
 meRouter.get("/:id", userController.userProfile);

@@ -77,8 +77,7 @@ async function userPosts(userId) {
   });
 
   if (!userpost || userpost.length === 0) {
-    // Corrected the reference
-    throw new Error("User does not have any posts!");
+    console.log("No posts of user");
   }
 
   return userpost;

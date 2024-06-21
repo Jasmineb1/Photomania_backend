@@ -48,31 +48,37 @@ async function login(req: Request, res: Response) {
   // console.log(inputhashedpw)
   const checkUser = await userRepository.findOne({ where: { email: email } });
   console.log(checkUser);
-  if (checkUser) {
-    const hashedPassword = checkUser.password;
-    const passwordMatch = await bcrypt.compare(password.trim(), hashedPassword);
-    if (passwordMatch) {
-      const token = jwt.sign(
-        {
-          userId: checkUser.id,
-        },
-        "secret",
-        { expiresIn: "1d" }
-      );
-      console.log("Token from service:", token);
-      console.log("userid from service:", checkUser.id);
-      let obj = {
-        userName: checkUser.username,
-        token: token,
-        message: "login successful!",
-      };
-      return obj;
-    }
-  } else {
-    let obj = {
+  if (!checkUser) {
+    return {
       user: null,
       token: null,
-      message: "Login unsuccessful!",
+      message: "User does not exist!",
+    };
+  }
+
+  const hashedPassword = checkUser.password;
+  const passwordMatch = await bcrypt.compare(password.trim(), hashedPassword);
+  if (passwordMatch) {
+    const token = jwt.sign(
+      {
+        userId: checkUser.id,
+      },
+      "secret",
+      { expiresIn: "1d" }
+    );
+    console.log("Token from service:", token);
+    console.log("userid from service:", checkUser.id);
+    let obj = {
+      userName: checkUser.username,
+      token: token,
+      message: "login successful!",
+    };
+    return obj;
+  } else {
+    let obj = {
+      user: checkUser.username,
+      token: null,
+      message: "Incorrect Password!",
     };
     return obj;
   }
@@ -124,9 +130,33 @@ async function updateUser(userId, updatedUserData) {
   }
 }
 
+// to delete user profile photo
+async function deleteUserPhoto(userId: number) {
+  try {
+    const userToUpdate = await userRepository.findOne({
+      where: { id: userId },
+    });
+
+    if (!userToUpdate) {
+      throw new Error("User not found!");
+    }
+
+    userToUpdate.userImg = null;
+    userToUpdate.userImgName = null;
+
+    await userRepository.save(userToUpdate);
+
+    return userToUpdate;
+  } catch (error) {
+    console.error("Error deleting user photo:", error);
+    throw new Error("Failed to delete user photo");
+  }
+}
+
 export const userService = {
   registerUser,
   login,
   userProfile,
   updateUser,
+  deleteUserPhoto,
 };

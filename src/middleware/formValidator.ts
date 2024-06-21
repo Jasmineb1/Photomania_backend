@@ -21,8 +21,8 @@ export const registerValidator = [
 ];
 
 export const postValidator = [
-  body("postCaption", "Invalid ! Caption required").not().isEmpty(),
+  body("postCaption", "Invalid ! Caption required").not(),
   body("postDesc", "Maximum characters exceeded").isLength({
-    max: 50,
+    max: 500,
   }),
 ];

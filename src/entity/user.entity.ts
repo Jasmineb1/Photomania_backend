@@ -42,6 +42,9 @@ export class UserRegistration extends BaseEntity {
   @Column()
   registeredOn!: Date;
 
+  @Column()
+  about!: string;
+
   @OneToMany((type) => Post, (Post) => Post.userRegistration)
   posts: Post[];
 }
